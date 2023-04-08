@@ -5,7 +5,7 @@
 class Game 
 {
 public:
-    void addScene(Scene&& s);
+    void addScene(Scene* s);
     void setScene(std::string name);
 
     void draw(void);
@@ -13,6 +13,6 @@ public:
     void mouseClick(const sf::Event::MouseButtonEvent& e);
     void keyboardPressed(const sf::Event::KeyEvent& e);
 private:
-    std::vector<Scene&> scenes;
+    std::vector<Scene*> scenes;
     Scene* active;
 };

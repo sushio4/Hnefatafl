@@ -23,18 +23,18 @@ void Board::draw()
         text.setStyle(sf::Text::Bold);
         text.setFont(font);
 
-        text.setString("Game 0ver");
+        text.setString("GAME OVER");
         text.setPosition(size/4 + 30, size/4 + 30);
         window.draw(text);
 
         if(winner == Attackers)
-            text.setString("Attackers won");
+            text.setString("ATTACKERS WON");
         else
-            text.setString("Defenders won");
+            text.setString("DEFENDERS WON");
         text.setPosition(size/4 + 30, size/4 + 70);
         window.draw(text);
 
-        text.setString("Click anywhere to restart");
+        text.setString("Click anywhere to exit");
         text.setPosition(size/4 + 30, size/4 + 110);
         window.draw(text);
     }

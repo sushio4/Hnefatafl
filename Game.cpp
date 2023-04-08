@@ -1,6 +1,6 @@
 #include "Game.hpp"
 
-void Game::addScene(Scene&& s)
+void Game::addScene(Scene* s)
 {
     scenes.push_back(s);
 }
@@ -9,14 +9,20 @@ void Game::setScene(std::string name)
 {
     for(auto s : scenes)
     {
-        if(s.getName() == name)
+        if(s->getName() == name)
         {
-            active = &s;
+            active = s;
+            s->init();
             return;
         }
     }
 
     active = nullptr;
+}
+
+void Game::draw(void)
+{
+    if(active) active->draw();
 }
 
 void Game::mouseMove(const sf::Event::MouseMoveEvent& e)

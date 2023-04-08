@@ -1,6 +1,6 @@
 #include "Board.hpp"
 
-inline Piece Board::getField(int x, int y) 
+Piece Board::getField(int x, int y) 
 {
     if(x < 0 || x > 10 || y < 0 || y > 10) return None;
 

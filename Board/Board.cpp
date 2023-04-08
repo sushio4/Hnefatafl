@@ -1,14 +1,14 @@
 #include "Board.hpp"
 
-Board::Board(std::string name, Game& super, sf::RenderWindow &window, int posx, int posy, int size) : Scene(super, name),
-        window(window), size(size), pos_x(posx), pos_y(posy), tileSize(size / 11)
+Board::Board(std::string name, Game& super, sf::RenderWindow &window, int posx, int posy, int size) : Scene(name, super, window),
+        size(size), pos_x(posx), pos_y(posy), tileSize(size / 11)
 {
     font.loadFromFile("default.otf");
     
-    restart();
+    init();
 }
 
-void Board::restart()
+void Board::init()
 {
     //set up tiles
     for(int i = 0; i < 11; i++)

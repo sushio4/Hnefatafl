@@ -5,4 +5,4 @@ std::string Scene::getName()
     return name;
 }
 
-Scene::Scene(Game& super, std::string name) : super(super), name(name) {}
+Scene::Scene(std::string name, Game& super, sf::RenderWindow& window) : window(window), super(super), name(name) {}

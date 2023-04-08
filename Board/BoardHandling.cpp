@@ -1,4 +1,5 @@
 #include "Board.hpp"
+#include "../Game.hpp"
 
 void Board::mouseMove(const sf::Event::MouseMoveEvent& e)
 {
@@ -15,6 +16,11 @@ void Board::mouseMove(const sf::Event::MouseMoveEvent& e)
     selected_x = x;
     selected_y = y;
 
+    updateLegals();
+}
+
+void Board::updateLegals()
+{
     for(int i = 0; i < 11; i++)
         for(int j = 0; j < 11; j++)
             legal[i][j] = legalMove(i,j);
@@ -27,7 +33,7 @@ void Board::mouseClick(const sf::Event::MouseButtonEvent& e)
 
     if(gameOver)
     {
-        restart();
+        super.setScene("MainMenu");
         return;
     }
 
@@ -35,15 +41,11 @@ void Board::mouseClick(const sf::Event::MouseButtonEvent& e)
     x /= tileSize;
     y /= tileSize;
 
-    if(clicked_x >= 0 && clicked_y >= 0 && clicked_x < 11 && clicked_y < 11)
+    if(clicked_x >= 0 && clicked_y >= 0 && clicked_x < 11 && clicked_y < 11 && legalMove(clicked_x, clicked_y, x, y))
     {
-        if(legalMove(clicked_x, clicked_y, x, y)) 
-            move(x, y);
+        move(x, y);
             
         clicked_x = -1, clicked_y = -1;
-        for(int i = 0; i < 11; i++)
-            for(int j = 0; j < 11; j++)
-                legal[i][j] = false;
     }
     else
     {
@@ -52,11 +54,17 @@ void Board::mouseClick(const sf::Event::MouseButtonEvent& e)
             (getField(x, y) == Defender && turn == Attackers) ||
             (getField(x, y) == King && turn == Attackers) ||
             (getField(x, y) == None)
-        ) return;
-
-        clicked_x = x;
-        clicked_y = y;
+        ) 
+        {
+            selected_x = selected_y = clicked_x = clicked_y = -1;
+        }
+        else
+        {
+            selected_x = clicked_x = x;
+            selected_y = clicked_y = y;
+        }
     }
+    updateLegals();
 }
 
 void Board::move(int to_x, int to_y)
@@ -77,16 +85,16 @@ void Board::move(int to_x, int to_y)
     else enemy = Defenders;
 
     //north
-    if(hostileFor(to_x, to_y - 1, player) && hostileFor(to_x, to_y - 2, enemy))
+    if(hostileFor(to_x, to_y - 1, player) && (hostileFor(to_x, to_y - 2, enemy) || getField(to_x, to_y - 1) == King))
         capture(to_x, to_y - 1);
     //south
-    if(hostileFor(to_x, to_y + 1, player) && hostileFor(to_x, to_y + 2, enemy))
+    if(hostileFor(to_x, to_y + 1, player) && (hostileFor(to_x, to_y + 2, enemy) || getField(to_x, to_y + 1) == King))
         capture(to_x, to_y + 1);
     //east
-    if(hostileFor(to_x - 1, to_y, player) && hostileFor(to_x - 2, to_y, enemy))
+    if(hostileFor(to_x - 1, to_y, player) && (hostileFor(to_x - 2, to_y, enemy) || getField(to_x - 1, to_y) == King))
         capture(to_x - 1, to_y);
     //west
-    if(hostileFor(to_x + 1, to_y, player) && hostileFor(to_x + 2, to_y, enemy))
+    if(hostileFor(to_x + 1, to_y, player) && (hostileFor(to_x + 2, to_y, enemy) || getField(to_x + 1, to_y) == King))
         capture(to_x + 1, to_y);
 
     turn = enemy;
@@ -112,5 +120,5 @@ void Board::capture(int x, int y)
 void Board::keyboardPressed(const sf::Event::KeyEvent& e)
 {
     if(e.code == sf::Keyboard::Key::R && e.control)
-        window.close();
+        init();
 }

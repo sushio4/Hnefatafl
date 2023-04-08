@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <cmath>
-#include "Board.hpp"
+#include "Board/Board.hpp"
+#include "Menu/Menu.hpp"
 #include "Game.hpp"
 
 const int WINDOW_X = 770, WINDOW_Y = 770;
@@ -10,8 +11,9 @@ int main()
     sf::RenderWindow window(sf::VideoMode(WINDOW_X, WINDOW_Y), "Hnefatafl");
 
     Game game;
-    game.addScene(Board("Board", game, window, 0, 0, (int)fmin(WINDOW_X, WINDOW_Y)));
-    game.setScene("Board");
+    game.addScene(new Board("Board", game, window, 0, 0, (int)fmin(WINDOW_X, WINDOW_Y)));
+    game.addScene(new Menu("MainMenu", game, window));
+    game.setScene("MainMenu");
 
     while(window.isOpen())
     {
