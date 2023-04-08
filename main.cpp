@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <cmath>
 #include "Board.hpp"
+#include "Game.hpp"
 
 const int WINDOW_X = 770, WINDOW_Y = 770;
 
@@ -8,8 +9,9 @@ int main()
 {
     sf::RenderWindow window(sf::VideoMode(WINDOW_X, WINDOW_Y), "Hnefatafl");
 
-    Board board(window, 0, 0, (int)fmin(WINDOW_X, WINDOW_Y));
-
+    Game game;
+    game.addScene(Board("Board", game, window, 0, 0, (int)fmin(WINDOW_X, WINDOW_Y)));
+    game.setScene("Board");
 
     while(window.isOpen())
     {
@@ -22,21 +24,20 @@ int main()
             switch(event.type)
             {
             case sf::Event::MouseMoved:
-                board.mouseMove(event.mouseMove.x, event.mouseMove.y);
+                game.mouseMove(event.mouseMove);
                 break;
             case sf::Event::MouseButtonPressed:
-                board.mouseClick(event.mouseButton.x, event.mouseButton.y);
+                game.mouseClick(event.mouseButton);
                 break;
             case sf::Event::KeyPressed:
-                if(event.key.code == sf::Keyboard::R && event.key.control)
-                    board.restart();
+                game.keyboardPressed(event.key);
                 break;
             }
         }
 
         window.clear();
 
-        board.draw();
+        game.draw();
 
         window.display();
     }

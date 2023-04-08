@@ -1,12 +1,8 @@
 #include "Board.hpp"
 
-Board::Board(sf::RenderWindow &window, int posx, int posy, int size) : window(window), size(size)
+Board::Board(std::string name, Game& super, sf::RenderWindow &window, int posx, int posy, int size) : Scene(super, name),
+        window(window), size(size), pos_x(posx), pos_y(posy), tileSize(size / 11)
 {
-    pos_x = posx;
-    pos_y = posy;
-
-    tileSize = size / 11;
-
     font.loadFromFile("default.otf");
     
     restart();

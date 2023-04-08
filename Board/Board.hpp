@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "Scene.hpp"
 
 enum Piece {
     None,
@@ -13,29 +14,31 @@ enum Player {
     Defenders
 };
 
-class Board 
+class Board : public Scene
 {
 public:
-    Board(sf::RenderWindow &window, int posx, int posy, int size);
+    Board(std::string name, Game& super, sf::RenderWindow &window, int posx, int posy, int size);
 
-    inline Piece getField(int x, int y);
     void draw();
 
-    bool legalMove(int to_x, int to_y);
-    bool legalMove(int from_x, int from_y, int to_x, int to_y);
-    void move(int to_x, int to_y);
-
-    void mouseMove(int x, int y);
-    void mouseClick(int x, int y);
-    void restart();
+    void mouseMove(const sf::Event::MouseMoveEvent& e);
+    void mouseClick(const sf::Event::MouseButtonEvent& e);
+    void keyboardPressed(const sf::Event::KeyEvent& e);
 
 private:
     void drawField(int x, int y);
     void drawPiece(int x, int y);
+    inline Piece getField(int x, int y);
+
     inline bool canStand(int x, int y);
     bool hostileFor(int x, int y, Player player);
+    bool legalMove(int to_x, int to_y);
+    bool legalMove(int from_x, int from_y, int to_x, int to_y);
+
+    void move(int to_x, int to_y);
     void capture(int x, int y);
 
+    void restart();
     void winAttackers();
     void winDefenders();
 

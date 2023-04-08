@@ -1,7 +1,10 @@
 #include "Board.hpp"
 
-void Board::mouseMove(int x, int y)
+void Board::mouseMove(const sf::Event::MouseMoveEvent& e)
 {
+    int x = e.x;
+    int y = e.y;
+
     if(gameOver) return;
     if(clicked_x >= 0 && clicked_y >= 0 && clicked_x < 11 && clicked_y < 11) return;
 
@@ -17,8 +20,11 @@ void Board::mouseMove(int x, int y)
             legal[i][j] = legalMove(i,j);
 }
 
-void Board::mouseClick(int x, int y)
+void Board::mouseClick(const sf::Event::MouseButtonEvent& e)
 {
+    int x = e.x;
+    int y = e.y;
+
     if(gameOver)
     {
         restart();
@@ -103,3 +109,8 @@ void Board::capture(int x, int y)
         winAttackers();
 }
 
+void Board::keyboardPressed(const sf::Event::KeyEvent& e)
+{
+    if(e.code == sf::Keyboard::Key::R && e.control)
+        window.close();
+}
