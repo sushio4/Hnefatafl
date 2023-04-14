@@ -53,7 +53,8 @@ void Board::mouseClick(const sf::Event::MouseButtonEvent& e)
             (getField(x, y) == Attacker && turn == Defenders) ||
             (getField(x, y) == Defender && turn == Attackers) ||
             (getField(x, y) == King && turn == Attackers) ||
-            (getField(x, y) == None)
+            (getField(x, y) == None) ||
+            (x == clicked_x && y == clicked_y)
         ) 
         {
             selected_x = selected_y = clicked_x = clicked_y = -1;
@@ -98,6 +99,14 @@ void Board::move(int to_x, int to_y)
         capture(to_x + 1, to_y);
 
     turn = enemy;
+
+    if(!hasAnyMoves())
+    {
+        if(turn == Attackers)
+            winDefenders();
+        else
+            winAttackers();
+    }
 }
 
 void Board::capture(int x, int y)

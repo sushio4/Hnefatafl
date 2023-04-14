@@ -24,20 +24,25 @@ bool Board::hostileFor(int x, int y, Player player)
     ));
 }
 
-inline bool Board::canStand(int x, int y)
+inline bool Board::canStand(int from_x, int from_y, int to_x, int to_y)
 {
-    return((getField(selected_x, selected_y) == King && 
+    return((getField(from_x, from_y) == King && 
         turn == Defenders && 
         (
-            (x == 5 && y == 5) ||
-            ((x == 0 || x == 10) && (y == 0 || y == 10))
+            (to_x == 5 && to_y == 5) ||
+            ((to_x == 0 || to_x == 10) && (to_y == 0 || to_y == 10))
         )
     ) ||
     (
-        getField(x,y) == None &&
-        !(x == 5 && y == 5) &&
-        !((x == 0 || x == 10) && (y == 0 || y == 10))
+        getField(to_x,to_y) == None &&
+        !(to_x == 5 && to_y == 5) &&
+        !((to_x == 0 || to_x == 10) && (to_y == 0 || to_y == 10))
     )); 
+}
+
+inline bool Board::canStand(int x, int y)
+{
+    return canStand(selected_x, selected_y, x, y);
 }
 
 bool Board::legalMove(int to_x, int to_y)
@@ -51,6 +56,8 @@ bool Board::legalMove(int to_x, int to_y)
 
 bool Board::legalMove(int from_x, int from_y, int to_x, int to_y)
 {
+    if(to_x < 0 || to_x >= 11 || to_y < 0 || to_y >= 11) return false;
+
     Piece piece = getField(from_x, from_y);
     if((piece == Attacker && turn == Defenders) || //checking whose turn it is
         (
@@ -89,4 +96,30 @@ bool Board::legalMove(int from_x, int from_y, int to_x, int to_y)
     }
 
     return true;
+}
+
+bool Board::hasAnyMoves()
+{
+    for(int x = 0; x < 11; x++)
+        for(int y = 0; y < 11; y++)
+        {
+            if(hasAnyMoves(x, y))
+                return true;
+        }
+
+    return false;
+}
+
+bool Board::hasAnyMoves(int x, int y)
+{
+    return (
+            (turn == Attackers && getField(x, y) == Attacker) ||
+            (turn == Defenders && getField(x, y) == Defender) ||
+            (turn == Defenders && getField(x, y) == King)
+        ) && (
+            canStand(x, y, x, y + 1) ||
+            canStand(x, y, x, y - 1) ||
+            canStand(x, y, x + 1, y) ||
+            canStand(x, y, x - 1, y)
+        );
 }

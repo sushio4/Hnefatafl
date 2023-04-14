@@ -32,9 +32,12 @@ private:
     Piece getField(int x, int y);
 
     inline bool canStand(int x, int y);
+    inline bool canStand(int from_x, int from_y, int to_x, int to_y);
     bool hostileFor(int x, int y, Player player);
     bool legalMove(int to_x, int to_y);
     bool legalMove(int from_x, int from_y, int to_x, int to_y);
+    bool hasAnyMoves();
+    bool hasAnyMoves(int x, int y);
 
     void updateLegals();
     void move(int to_x, int to_y);
